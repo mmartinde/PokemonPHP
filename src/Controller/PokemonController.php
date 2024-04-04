@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Debilidad;
 use App\Entity\Pokemon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,14 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PokemonController  extends AbstractController{
 
-    #[Route("/pokemon/{id}")]
+    #[Route("/pokemon/{id}", name:"show-pokemon")]
     public function showPokemon (EntityManagerInterface $doctrine, $id){
         $repository = $doctrine->getRepository(Pokemon::class);
         $pokemon = $repository->find($id);
         return $this->render("pokemon/showPokemon.html.twig",["pokemon"=>$pokemon]);
     }
 
-    #[Route("/pokemons")]
+    #[Route("/pokemons", name:"list-pokemons")]
     public function showListPokemons (EntityManagerInterface $doctrine){
         $repository = $doctrine->getRepository(Pokemon::class);
         $pokemons = $repository->findAll();
@@ -51,10 +52,37 @@ class PokemonController  extends AbstractController{
         $pokemon4->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png");
         $pokemon4->setCode(0001);
 
+        $debilidad = new Debilidad();
+        $debilidad -> setName("Fuego"); 
+
+        $debilidad2 = new Debilidad();
+        $debilidad2 -> setName("Agua"); 
+
+        $debilidad3 = new Debilidad();
+        $debilidad3 -> setName("Hielo"); 
+
+        $debilidad4 = new Debilidad();
+        $debilidad4 -> setName("Metal"); 
+
+        $pokemon-> addDebilidade($debilidad2);
+        $pokemon-> addDebilidade($debilidad);
+
+        $pokemon2-> addDebilidade($debilidad3);
+
+        $pokemon3-> addDebilidade($debilidad4);
+
+        $pokemon4-> addDebilidade($debilidad);
+        $pokemon4-> addDebilidade($debilidad3);
+
         $doctrine->persist($pokemon);
         $doctrine->persist($pokemon2);
         $doctrine->persist($pokemon3);
         $doctrine->persist($pokemon4);
+        $doctrine->persist($debilidad);
+        $doctrine->persist($debilidad2);
+        $doctrine->persist($debilidad3);
+        $doctrine->persist($debilidad4);
+        
 
         $doctrine->flush();
 
