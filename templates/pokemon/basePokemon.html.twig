@@ -20,6 +20,7 @@
                         <a class="nav-link" href="{{path("newPokemon")}}">Crear Pokemon</a>
                     </div>
                 </div>
+                <p style="color: white">{{app.user.name | default("")}}</p>
             </nav>
             {% block contenido %}{% endblock %}
             {% block js %} {% endblock %}

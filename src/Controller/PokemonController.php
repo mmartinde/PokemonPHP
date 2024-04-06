@@ -20,6 +20,15 @@ class PokemonController  extends AbstractController{
         return $this->render("pokemon/showPokemon.html.twig",["pokemon"=>$pokemon]);
     }
 
+    #[Route("/delete/pokemon/{id}", name:"delete-pokemon")]
+    public function deletePokemon (EntityManagerInterface $doctrine, $id){
+        $repository = $doctrine->getRepository(Pokemon::class);
+        $pokemon = $repository->find($id);
+        $doctrine -> remove($pokemon);
+        $doctrine-> flush();
+        return $this -> redirectToRoute('list-pokemons');
+    }
+
     #[Route("/pokemons", name:"list-pokemons")]
     public function showListPokemons (EntityManagerInterface $doctrine){
         $repository = $doctrine->getRepository(Pokemon::class);
@@ -29,7 +38,7 @@ class PokemonController  extends AbstractController{
 
     #[Route("/new/pokemon", name:"newPokemon")]
     public function newPokemon (EntityManagerInterface $doctrine, Request $request){
-        $form = $this-> createForm(PokemonType::class); 
+        $form = $this-> createForm(PokemonType::class);
         $form -> handleRequest($request);
         if($form-> isSubmitted() && $form-> isValid()){
             $pokemon = $form-> getData();
@@ -75,19 +84,19 @@ class PokemonController  extends AbstractController{
         $pokemon2 = new Pokemon();
         $pokemon2->setName("Pikachu");
         $pokemon2->setDescription("Tras nacer, crece alimentándose durante un tiempo de los nutrientes que contiene el bulbo de su lomo. ");
-        $pokemon2->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png");
+        $pokemon2->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png");
         $pokemon2->setCode(0001);
 
         $pokemon3 = new Pokemon();
         $pokemon3->setName("Bulbasur");
         $pokemon3->setDescription("Tras nacer, crece alimentándose durante un tiempo de los nutrientes que contiene el bulbo de su lomo. ");
-        $pokemon3->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png");
+        $pokemon3->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png");
         $pokemon3->setCode(0001);
 
         $pokemon4 = new Pokemon();
         $pokemon4->setName("Squirtel");
         $pokemon4->setDescription("Tras nacer, crece alimentándose durante un tiempo de los nutrientes que contiene el bulbo de su lomo. ");
-        $pokemon4->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png");
+        $pokemon4->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/007.png");
         $pokemon4->setCode(0001);
 
         $debilidad = new Debilidad();
