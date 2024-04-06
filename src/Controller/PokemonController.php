@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Debilidad;
 use App\Entity\Pokemon;
+use App\Form\PokemonType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,6 +26,42 @@ class PokemonController  extends AbstractController{
         $pokemons = $repository->findAll();
         return $this->render("pokemon/listPokemons.html.twig",["pokemons"=>$pokemons]);
     }
+
+    #[Route("/new/pokemon", name:"newPokemon")]
+    public function newPokemon (EntityManagerInterface $doctrine, Request $request){
+        $form = $this-> createForm(PokemonType::class); 
+        $form -> handleRequest($request);
+        if($form-> isSubmitted() && $form-> isValid()){
+            $pokemon = $form-> getData();
+            $doctrine-> persist($pokemon);
+            $doctrine-> flush();
+            $this-> addFlash('success', 'Pokemon creado correctamente');
+            return $this-> redirectToRoute("show-pokemon", ['id'=>$pokemon->getId()]);
+        }
+
+        return $this->render("pokemon/newPokemon.html.twig",["newPokemon"=>$form]);
+    }
+
+    #[Route("/edit/pokemon/{id}", name:"edit-pokemon")]
+    public function editPokemon (EntityManagerInterface $doctrine, Request $request, $id){
+
+        $repository = $doctrine->getRepository(Pokemon::class);
+        $pokemon = $repository->find($id);
+
+        $form = $this-> createForm(PokemonType::class, $pokemon); 
+        $form -> handleRequest($request);
+
+        if($form-> isSubmitted() && $form-> isValid()){
+            $pokemon = $form-> getData();
+            $doctrine-> persist($pokemon);
+            $doctrine-> flush();
+            $this-> addFlash('success', 'Pokemon creado correctamente');
+            return $this-> redirectToRoute("show-pokemon", ['id'=>$pokemon->getId()]);
+        }
+
+        return $this->render("pokemon/newPokemon.html.twig",["newPokemon"=>$form]);
+    }
+
 
     #[Route("/insert/pokemon")]
     public function insertPokemons (EntityManagerInterface $doctrine)
