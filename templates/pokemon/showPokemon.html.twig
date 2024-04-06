@@ -1,6 +1,9 @@
 {% extends "pokemon/basePokemon.html.twig" %}
 
 {% block contenido %}
+{% for mensaje in app.flashes('success')%}
+<p>{{mensaje}}</p>
+{%endfor%}
 <div class="container">
     <div class="row">
         <div class="col text-center"><h2>{{ pokemon.name }} Nº {{ pokemon.code}}</h2></div>
