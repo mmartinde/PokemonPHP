@@ -42,6 +42,26 @@ class PokemonController  extends AbstractController{
         return $this->render("pokemon/newPokemon.html.twig",["newPokemon"=>$form]);
     }
 
+    #[Route("/edit/pokemon/{id}", name:"edit-pokemon")]
+    public function editPokemon (EntityManagerInterface $doctrine, Request $request, $id){
+
+        $repository = $doctrine->getRepository(Pokemon::class);
+        $pokemon = $repository->find($id);
+
+        $form = $this-> createForm(PokemonType::class, $pokemon); 
+        $form -> handleRequest($request);
+
+        if($form-> isSubmitted() && $form-> isValid()){
+            $pokemon = $form-> getData();
+            $doctrine-> persist($pokemon);
+            $doctrine-> flush();
+            $this-> addFlash('success', 'Pokemon creado correctamente');
+            return $this-> redirectToRoute("show-pokemon", ['id'=>$pokemon->getId()]);
+        }
+
+        return $this->render("pokemon/newPokemon.html.twig",["newPokemon"=>$form]);
+    }
+
 
     #[Route("/insert/pokemon")]
     public function insertPokemons (EntityManagerInterface $doctrine)
