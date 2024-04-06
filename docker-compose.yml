@@ -25,20 +25,9 @@ services:
         build: 
             context: phpdocker/php-fpm
             args:
-                user: ${USER}
-                uid: ${UID}
+                user: moises.carretero
+                uid: 4158
         working_dir: /application
         volumes:
             - .:/application:cached
             - ./phpdocker/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
-
-    phpmyadmin:
-        image: phpmyadmin
-        ports:
-            - "8008:80"
-        environment:
-            - MYSQL_ROOT_PASSWORD=rootpass
-            - PMA_HOST=mysql
-            - PMA_USER=user
-            - PMA_PASSWORD=pass
-            - PMA_PMADB=demo
